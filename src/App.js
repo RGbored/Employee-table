@@ -40,6 +40,18 @@ class Table extends Component {
       this.setState({ error: true, loading: false})
     }
   }
+   
+  async deleteId(id) {
+    console.log(id);  
+      const response = await fetch('https://mockrestapi.herokuapp.com/api/employee/'+id, {method: 'DELETE'});
+      if(response.ok){
+        this.reRenderTable();
+        console.log("Delete Successful!");
+      }
+      else{
+        console.log("Delete Failed!");
+      }
+  }
 
 
   renderTableRows = () => {
@@ -55,7 +67,7 @@ class Table extends Component {
           <td>{user.address}</td>
           <td>{user.createdAt}</td>
           <td>{user.updatedAt}</td>
-          <td><button type="button">Delete</button></td>
+          <td><button onClick={()=>this.deleteId(user._id)}type="button">Delete</button></td>
         </tr>
       )
     })
@@ -75,15 +87,15 @@ class Table extends Component {
       <div>
         <label><b>Page No:{this.state.pageNo}</b></label>
         <button onClick={()=>{
+          if(this.state.pageNo!=1)
+          this.state.pageNo--;
+          this.reRenderTable();
+        }}type="button">Previous</button>
+        <button onClick={()=>{
           this.state.pageNo++;
           this.reRenderTable();
         }} 
         type="button">Next</button>
-        <button onClick={()=>{
-          if(this.state.pageNo!=1)
-          this.state.pageNo--;
-            this.reRenderTable();
-        }}type="button">Previous</button>
         <table>
           <thead>
             <tr>
